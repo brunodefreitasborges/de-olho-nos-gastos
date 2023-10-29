@@ -21,6 +21,7 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { LoaderStore } from './store/loader.store';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 registerLocaleData(localePt, 'pt');
 
@@ -43,7 +44,8 @@ registerLocaleData(localePt, 'pt');
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    NgxSkeletonLoaderModule
   ],
   providers: [CongressmenStore, ExpensesStore, LoaderStore, {provide: LOCALE_ID, useValue: 'pt'}],
   bootstrap: [AppComponent]

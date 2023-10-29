@@ -1,31 +1,35 @@
 <section *ngIf="congressman | async as congressman" class="relative w-full max-w-[1920px] p-4 sm:p-12 mx-auto justify-center overflow-y-scroll">
     <mat-icon class="absolute top-1 right-1 sm:scale-150 sm:top-4 sm:right-4 hover:cursor-pointer" (click)="close()">close</mat-icon>
     <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-        <div class="flex">
-            <img class="min-w-[180px]  lg:min-w-[300px] max-w-[180px] sm:max-w-[240px] border-[1px] border-black rounded-xl border-opacity-30" [src]="congressman.ultimoStatus.urlFoto" alt="">
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-base sm:text-lg">Nome completo: {{ congressman.nomeCivil }}</h2>
-            <h3 class="text-base sm:text-lg">CPF: {{ congressman.cpf }}</h3>
-            <h3 class="text-base sm:text-lg">Sexo: {{ congressman.sexo }}</h3>
-            <h3 class="text-base sm:text-lg">Website: {{ congressman.urlWebsite || 'Não possui' }}</h3>
-            <h3 class="text-base sm:text-lg">Redes sociais: 
-                <div *ngIf="congressman.redeSocial.length > 0; else noSocial" class="flex gap-4 my-2">
-                    <span *ngFor="let redeSocial of congressman.redeSocial" [innerHTML]="redeSocial | socialIcon">
-                    </span>
-                </div>
-                <ng-template #noSocial><span>Não possui</span></ng-template>
-            </h3>
-            <h3 class="text-base sm:text-lg">Data de nascimento: {{ formatDate(congressman.dataNascimento) }}</h3>
-            <h3 class="text-base sm:text-lg">UF de nascimento: {{ congressman.ufNascimento }}</h3>
-            <h3 class="text-base sm:text-lg">Município de nascimento: {{ congressman.municipioNascimento }}</h3>
-            <h3 class="text-base sm:text-lg">Escolaridade: {{ congressman.escolaridade }}</h3>
-        </div>
+        <ng-container *ngIf="(isLoading | async) === true; else content">
+            <ngx-skeleton-loader [theme]="{height: '300px', width: '300px'}"></ngx-skeleton-loader>
+        </ng-container>
+        <ng-template #content>
+            <div class="flex">
+                <img class="min-w-[180px]  lg:min-w-[300px] max-w-[180px] sm:max-w-[240px] border-[1px] border-black rounded-xl border-opacity-30" [src]="congressman.ultimoStatus.urlFoto" alt="">
+            </div>
+            <div class="flex flex-col gap-2">
+                <h2 class="text-base sm:text-lg">Nome completo: {{ congressman.nomeCivil }}</h2>
+                <h3 class="text-base sm:text-lg">CPF: {{ congressman.cpf }}</h3>
+                <h3 class="text-base sm:text-lg">Sexo: {{ congressman.sexo }}</h3>
+                <h3 class="text-base sm:text-lg">Website: {{ congressman.urlWebsite || 'Não possui' }}</h3>
+                <h3 class="text-base sm:text-lg">Redes sociais: 
+                    <div *ngIf="congressman.redeSocial.length > 0; else noSocial" class="flex gap-4 my-2">
+                        <span *ngFor="let redeSocial of congressman.redeSocial" [innerHTML]="redeSocial | socialIcon">
+                        </span>
+                    </div>
+                    <ng-template #noSocial><span>Não possui</span></ng-template>
+                </h3>
+                <h3 class="text-base sm:text-lg">Data de nascimento: {{ formatDate(congressman.dataNascimento) }}</h3>
+                <h3 class="text-base sm:text-lg">UF de nascimento: {{ congressman.ufNascimento }}</h3>
+                <h3 class="text-base sm:text-lg">Município de nascimento: {{ congressman.municipioNascimento }}</h3>
+                <h3 class="text-base sm:text-lg">Escolaridade: {{ congressman.escolaridade }}</h3>
+            </div>
+        </ng-template>
     </div>
     <div class="flex flex-col">
         <mat-divider class="h-[1px] bg-black mt-12 mx-28"></mat-divider>
         <app-expenses [id]="id"></app-expenses>
  
     </div>
-    
 </section>

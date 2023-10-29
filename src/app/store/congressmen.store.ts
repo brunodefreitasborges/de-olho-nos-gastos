@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { ComponentStore, tapResponse } from "@ngrx/component-store";
 import { Congressman, Congressmen } from "../integration/congressmen/congressmen.model";
 import { CongressmenService } from "../integration/congressmen/congressmen.service";
-import { EMPTY, Observable, catchError, switchMap } from "rxjs";
+import { EMPTY, Observable, catchError, switchMap, tap } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
+import { LoaderStore } from "./loader.store";
 
 
 export interface CongressmenState {
@@ -18,7 +19,7 @@ export class CongressmenStore extends ComponentStore<CongressmenState> {
 
     dataFetched = false;
 
-    constructor(private _service: CongressmenService) {
+    constructor(private _service: CongressmenService, private _loaderStore:LoaderStore) {
         super(initialState);
     }
 
@@ -56,12 +57,15 @@ export class CongressmenStore extends ComponentStore<CongressmenState> {
 
     readonly fetchCongressmanById = this.effect((id$: Observable<string>) => {
         return id$.pipe(
+            tap(() => this._loaderStore.setIsLoadingCongressman(true)),
             switchMap((id) => this._service.fetchCongressman(id).pipe(
                 tapResponse((response) => {
                     this.setSelectedCongressman(response);
+                    this._loaderStore.setIsLoadingCongressman(false);
                 },
                     (error: HttpErrorResponse) => {
                         console.error('Error fetching selected congressman');
+                        this._loaderStore.setIsLoadingCongressman(false);
                     }),
                 catchError(() => EMPTY),
             ))

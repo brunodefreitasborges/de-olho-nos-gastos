@@ -3,6 +3,7 @@ import { Component, Inject, Input, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { Expense, Option } from 'src/app/integration/expenses/expenses.model';
 import { ExpensesStore } from 'src/app/store/expenses.store';
+import { LoaderStore } from 'src/app/store/loader.store';
 
 @Component({
   selector: 'app-expenses',
@@ -11,6 +12,7 @@ import { ExpensesStore } from 'src/app/store/expenses.store';
 export class ExpensesComponent {
   
   @Input() id!: string;
+  isLoading!: Observable<boolean | undefined>;
   expenses?: Observable<Expense[] | undefined>;
   totalExpenses?: number;
   filteredYears!: Observable<string[]>;
@@ -33,10 +35,12 @@ export class ExpensesComponent {
   selectedMonths: Option[] = [this.getCurrentMonthOption()];
 
   expensesStore = inject(ExpensesStore);
+  loaderStore = inject(LoaderStore);
 
   constructor() {
     this.expenses = this.expensesStore.getExpenses;
     this.years = this.generateYears(10);
+    this.isLoading = this.loaderStore.getisLoadingExpenses;
   }
 
   ngOnInit(): void {
@@ -85,6 +89,22 @@ export class ExpensesComponent {
   getCurrentMonthOption(): Option {
     const currentMonth = new Date().getMonth() + 1;
     return this.months.find((month) => month.value === currentMonth.toString())!;
+  }
+
+  orderByYearAndMonth(a: Expense, b: Expense): number {
+    if (a.ano < b.ano) {
+      return -1;
+    } else if (a.ano > b.ano) {
+      return 1;
+    } else {
+      if (a.mes < b.mes) {
+        return -1;
+      } else if (a.mes > b.mes) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
 }
 

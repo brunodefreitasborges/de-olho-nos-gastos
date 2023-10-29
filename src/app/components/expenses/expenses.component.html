@@ -1,11 +1,21 @@
 <h2 class="text-center text-2xl my-8 lg:mx-24">DESPESAS</h2>
-<div class="flex flex-col lg:mx-24 p-8">
-    <app-chips-input [label]="'Selecione os meses'" [options]="months" [selectedItems]="selectedMonths" (selectedItemsChanged)="handleMonthsChanged($event)"></app-chips-input>
+<div class="flex flex-col lg:mx-24 mb-8 p-0 sm:p-8">
+    <app-chips-input [label]="'Selecione os meses (deixe em branco para todos os meses)'" [options]="months" [selectedItems]="selectedMonths" (selectedItemsChanged)="handleMonthsChanged($event)"></app-chips-input>
     <app-chips-input [label]="'Selecione os anos'" [options]="years" [selectedItems]="selectedYears" (selectedItemsChanged)="handleYearsChanged($event)"></app-chips-input>
     <button mat-raised-button color="primary" (click)="filterExpenses()">FILTRAR</button>
 </div>
 
-<div *ngIf="expenses | async as expenses" class="flex flex-col gap-8 lg:mx-24 p-8 border-2 rounded-md border-gray-200 max-h-[600px] overflow-scroll">
-    <p class="text-xl">Total de gastos no período informado: {{ totalExpenses | currency:'BRL' }}</p>
-    <app-expenses-card *ngFor="let expense of expenses" [expense]="expense"></app-expenses-card>
-</div>
+<ng-container *ngIf="(isLoading | async) === true; else content">
+    <mat-spinner class="mx-auto"></mat-spinner>
+</ng-container>
+<ng-template #content>
+    <div *ngIf="(expenses | async) as expenses" class="flex flex-col gap-8 lg:mx-24 p-2 sm:p-8 sm:border-2 rounded-md border-gray-200">
+        <ng-container *ngIf="expenses.length > 0; else noExpenses">
+            <p class="text-center text-base sm:text-xl">Total de gastos no período informado: {{ totalExpenses | currency:'BRL' }}</p>
+            <app-expenses-card *ngFor="let expense of expenses" [expense]="expense"></app-expenses-card>
+        </ng-container>
+        <ng-template #noExpenses>
+            <p class="text-base sm:text-xl">Não há lançamentos para o período informado.</p>
+        </ng-template>
+    </div>
+</ng-template>

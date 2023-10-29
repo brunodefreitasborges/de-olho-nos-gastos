@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { ComponentStore, tapResponse } from "@ngrx/component-store";
-import { EMPTY, Observable, catchError, switchMap } from "rxjs";
+import { EMPTY, Observable, catchError, finalize, switchMap, tap } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Expense } from "../integration/expenses/expenses.model";
 import { ExpensesService } from "../integration/expenses/expenses.service";
+import { LoaderStore } from "./loader.store";
 
 
 export interface ExpensesState {
@@ -15,7 +16,7 @@ const initialState: ExpensesState = {};
 @Injectable()
 export class ExpensesStore extends ComponentStore<ExpensesState> {
 
-    constructor(private _service: ExpensesService) {
+    constructor(private _service: ExpensesService, private _loaderStore: LoaderStore) {
         super(initialState);
     }
 
@@ -29,18 +30,20 @@ export class ExpensesStore extends ComponentStore<ExpensesState> {
    
     readonly fetchExpenses = this.effect((query$: Observable<[string, string[], string[]]>) => {
         return query$.pipe(
-            switchMap((query) => this._service.fetchExpenses(query[0], query[1], query[2]).pipe(
-                tapResponse((response) => {
-                    this.setExpenses(response);
-                },
-                    (error: HttpErrorResponse) => {
-                        console.error('Error fetching Expenses');
-                        
-                    }),
-                catchError(() => EMPTY),
-            ))
+          tap(() => this._loaderStore.setIsLoadingExpenses(true)),
+          switchMap((query) => this._service.fetchExpenses(query[0], query[1], query[2]).pipe(
+            tapResponse((response) => {
+              this.setExpenses(response);
+              this._loaderStore.setIsLoadingExpenses(false);
+            },
+            (error: HttpErrorResponse) => {
+              console.error('Error fetching Expenses');
+              this._loaderStore.setIsLoadingExpenses(false);
+            }),
+            catchError(() => EMPTY)
+          ))
         );
-    });
+      });
 
     resetExpenses = this.updater((state: ExpensesState) => ({
         ...state,

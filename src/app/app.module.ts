@@ -20,6 +20,7 @@ import { ChipsInputComponent } from './components/chips-input/chips-input.compon
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { LoaderStore } from './store/loader.store';
 
 registerLocaleData(localePt, 'pt');
 
@@ -44,7 +45,7 @@ registerLocaleData(localePt, 'pt');
     ReactiveFormsModule,
     MaterialModule
   ],
-  providers: [CongressmenStore, ExpensesStore, {provide: LOCALE_ID, useValue: 'pt'}],
+  providers: [CongressmenStore, ExpensesStore, LoaderStore, {provide: LOCALE_ID, useValue: 'pt'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

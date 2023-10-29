@@ -91,20 +91,16 @@ export class ExpensesComponent {
     return this.months.find((month) => month.value === currentMonth.toString())!;
   }
 
-  orderByYearAndMonth(a: Expense, b: Expense): number {
-    if (a.ano < b.ano) {
-      return -1;
-    } else if (a.ano > b.ano) {
-      return 1;
-    } else {
-      if (a.mes < b.mes) {
-        return -1;
-      } else if (a.mes > b.mes) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
+  getUniqueTipoDespesa(expenses: Expense[]): string[] {
+    return [...new Set(expenses.map((expense) => expense.tipoDespesa))];
+  }
+  
+  expensesForTipoDespesa(expenses: Expense[], tipoDespesa: string): Expense[] {
+    return expenses.filter((expense) => expense.tipoDespesa === tipoDespesa);
+  }
+
+  getTotalExpenses(expenses: Expense[], tipoDespesa: string): number {
+    return expenses.filter((expense) => expense.tipoDespesa == tipoDespesa).reduce((acc, expense) => acc + expense.valorLiquido, 0);
   }
 }
 

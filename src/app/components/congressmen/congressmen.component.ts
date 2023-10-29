@@ -19,8 +19,8 @@ export class CongressmenComponent implements OnInit {
   dialog = inject(MatDialog);
   congressmen!: Congressmen[];
   filteredCongressmen: Congressmen[] = [];
-  parties!: Set<string>;
-  ufs!: Set<string>;
+  parties!: Array<string>;
+  ufs!: Array<string>;
   form!: FormGroup;
 
   constructor(private congressmenStore: CongressmenStore) {
@@ -34,8 +34,8 @@ export class CongressmenComponent implements OnInit {
       filter((congressmen) => !!congressmen)
     ).subscribe((congressmen) => {
       this.congressmen = congressmen!;
-      this.parties = new Set(congressmen!.map((congressman) => congressman.siglaPartido));
-      this.ufs = new Set(congressmen!.map((congressman) => congressman.siglaUf));
+      this.parties = Array.from(new Set(congressmen!.map((congressman) => congressman.siglaPartido))).sort();
+      this.ufs = Array.from(new Set(congressmen!.map((congressman) => congressman.siglaUf))).sort();
     });
     
     this.form = new FormGroup({

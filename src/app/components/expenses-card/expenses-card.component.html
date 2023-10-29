@@ -1,0 +1,15 @@
+<div *ngIf="expense" class="border-[1px] rounded-lg border-black max-w-[1400px] mx-auto p-4 shadow-md">
+    <h3>Ano: {{ expense.ano }}</h3>
+    <h3>Mês: {{ expense.mes }}</h3>
+    <h3>Tipo: {{ expense.tipoDespesa }}</h3>
+    <h3>Valor: R${{ expense.valorLiquido }}</h3>
+    <h3>Parcela: {{ expense.parcela > 0 ? expense.parcela : 'N/A' }}</h3>
+    <h3>Fornecedor: {{ expense.nomeFornecedor }}</h3>
+    <h3>CPF/CNPJ: {{ expense.cnpjCpfFornecedor }}</h3>
+    <h3 *ngIf="expense.urlDocumento; else noDocument">
+        Comprovante: <a [href]="expense.urlDocumento" target="_blank"><span class="text-purple-900 underline">Acessar</span></a>
+    </h3>
+    <ng-template #noDocument>
+        <h3> Comprovante: <span class="text-red-500">Não consta</span></h3>
+    </ng-template>
+</div>

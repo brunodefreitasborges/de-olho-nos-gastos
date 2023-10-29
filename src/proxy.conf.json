@@ -1,0 +1,12 @@
+{
+    "/api/*": {
+      "target": "https://dadosabertos.camara.leg.br/api/v2/deputados",
+      "secure": true,
+      "pathRewrite": {
+        "^/api": ""
+      },
+      "changeOrigin": true,
+      "logLevel": "debug"
+     
+    }
+  }

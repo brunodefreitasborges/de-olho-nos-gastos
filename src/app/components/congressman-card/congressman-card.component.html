@@ -1,0 +1,10 @@
+<mat-card *ngIf="congressmen" class="w-[196px]">
+    <mat-card-header>
+      <mat-card-title class="truncate max-w-[164px]">{{ congressmen.nome }}</mat-card-title>
+      <mat-card-subtitle>{{ congressmen.siglaPartido }} / {{ congressmen.siglaUf }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="congressmen.urlFoto" alt="Foto do Deputado">
+    <mat-card-actions class="flex items-center justify-center">
+      <button mat-stroked-button (click)="onDetails(congressmen.id)">DETALHES</button>
+    </mat-card-actions>
+  </mat-card>

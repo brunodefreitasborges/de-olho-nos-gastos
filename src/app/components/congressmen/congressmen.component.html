@@ -1,0 +1,32 @@
+<section class="w-full max-w-[1920px] mx-auto">
+    <form [formGroup]="form" class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-4 mt-12 px-4">
+        <mat-form-field appearance="outline" class="lg:w-[240px]">
+            <mat-label>Nome</mat-label>
+            <input type="email" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Partido</mat-label>
+            <mat-select formControlName="party">
+              <mat-option *ngFor="let party of parties" [value]="party">
+                {{party}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="lg:w-[96px]">
+            <mat-label>UF</mat-label>
+            <mat-select formControlName="uf">
+              <mat-option *ngFor="let uf of ufs" [value]="uf">
+                {{uf}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button class="h-[56px] text-lg" mat-raised-button color="primary" (click)="resetForm()">Limpar Filtros</button>
+        <span class="pt-4 italic">{{ filteredCongressmen.length }} resultados</span>
+    </form>
+
+    <div  *ngIf="filteredCongressmen.length > 0" class="p-8 flex justify-center flex-wrap gap-8">
+        <app-congressman-card *ngFor="let congressmen of filteredCongressmen" [congressmen]="congressmen" (details)="details($event)">
+        </app-congressman-card>
+    </div>
+
+</section>
